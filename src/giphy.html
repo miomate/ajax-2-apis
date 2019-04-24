@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Ajax beginner</title>
+  </head>
+  <body>
+    <h1>AJAX first steps</h1>
+    <input type="text" onClick="this.select();"  id="searchField" value="giphy" placeholder="giphy"  />
+    <button type="button" id="searchBtn">Search</button>
+    <div id="gifs"></div>
+    <script>
+
+      var searchBtn  = document.getElementById("searchBtn");
+      document.getElementById("searchBtn").addEventListener("click", loadGifs);
+
+      
+
+      var xhr = new XMLHttpRequest();
+
+      function loadGifs() {
+      var searchField      = document.getElementById("searchField");
+      var searchValue      = searchField.value
+      var searchQuery      = "http://api.giphy.com/v1/gifs/search?q=" + searchValue + "&api_key=WNSD0gTk0GGWOtubrHI3GMp2jWBI9FGL&limit=5";
+        
+        // ** Makes input field empty after search
+        // searchValue = '';
+        // searchField.value = searchValue;
+        // searchField.removeAttribute('value');
+
+        xhr.open("GET", searchQuery, true);
+        xhr.onload = function() {
+          var output = "";
+          
+          var gifs = JSON.parse(this.responseText).data;
+
+          for (var i = 0; i < gifs.length; i++) {
+            for (var i of gifs) {
+            output += `<image src="${i.images.fixed_width.url}">`
+            // output += `<image src="${i.images.fixed_height_still.url}">`
+            // output += '<div id="gifs"><p>' + i.id + '</p></div>'
+
+            //searchField.removeAttribute('value');
+            console.log(searchQuery) // object provided by giphy
+            }
+          }
+          document.getElementById("gifs").innerHTML = output;
+        };
+        xhr.send();
+      }
+      window.onload = loadGifs();
+    </script>
+  </body>
+</html>
